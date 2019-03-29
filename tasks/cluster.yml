@@ -1,0 +1,16 @@
+---
+- name: Stop RabbitMQ app
+  command: "/sbin/rabbitmqctl stop_app" 
+  when: inventory_hostname in rabbitmq_cluster_members
+
+- name: Reset RabbitMQ
+  command: "/sbin/rabbitmqctl reset" 
+  when: inventory_hostname in rabbitmq_cluster_members
+
+- name: Join RabbitMQ cluster
+  command: "/sbin/rabbitmqctl join_cluster rabbit@{{ hostvars[play_hosts[0]]['ansible_hostname'] }}" 
+  when: inventory_hostname in rabbitmq_cluster_members
+
+- name: Start RabbitMQ app
+  command: "/sbin/rabbitmqctl start_app" 
+  when: inventory_hostname in rabbitmq_cluster_members
